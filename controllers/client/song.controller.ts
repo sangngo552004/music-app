@@ -60,3 +60,32 @@ export const detail = async (req : Request, res : Response) => {
 
 
 };
+
+//[PATCH] /songs/like/:type/:slugSong
+export const like = async (req : Request, res : Response) => {
+    const type : string = req.params.type;
+    const songId : string = req.params.songId;
+    const song = await Song.findOne({
+        _id : songId,
+        deleted : false,
+        status : "active"
+    });
+    let updateLike : number = song.like ;
+    if (type == "yes") {
+        updateLike = updateLike + 1;
+    }else {
+        updateLike = updateLike - 1;
+    }
+
+    await Song.updateOne({
+        _id : songId
+    },{
+        like : updateLike
+    });
+
+    res.json({
+        code : 200,
+        message:"Thành công!",
+        like : updateLike
+    });
+}

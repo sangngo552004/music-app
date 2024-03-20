@@ -1,3 +1,5 @@
+//play audio
+
 const elementAplayer = document.getElementById('aplayer');
 
 if(elementAplayer) {
@@ -27,3 +29,28 @@ if(elementAplayer) {
         avatar.style.animationPlayState = "paused";
     });
 }
+//end play audio
+
+//button like
+const buttonLike = document.querySelector("[button-like]");
+if (buttonLike) {
+    buttonLike.addEventListener("click", () => {
+        const isActive = buttonLike.classList.contains("active");
+        
+        const type = isActive ? "no" : "yes";
+
+        const idSong = buttonLike.getAttribute("button-like");
+        const link = `/songs/like/${type}/${idSong}`;
+        fetch(link, {
+            method : "PATCH"
+        })
+            .then(res => res.json())
+            .then(data => {
+                const dataLike = buttonLike.querySelector("[data-like]");
+                dataLike.innerHTML = data.like;
+
+                buttonLike.classList.toggle("active");
+            })
+    })
+}
+//end button like
