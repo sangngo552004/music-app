@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Song from "../../models/song.model";
 import Topic from "../../models/topic.model";
 import Singer from "../../models/singer.model";
+import FavoriteSong from "../../models/favorite-song.model";
 
 //[GET] /songs/:slugTopic
 export const list = async (req : Request, res : Response) => {
@@ -51,6 +52,11 @@ export const detail = async (req : Request, res : Response) => {
         deleted : false
     }).select("title");
     
+    const favoriteSong = await FavoriteSong.findOne({
+        userId : "",
+        songId : song.id
+    });
+    song["isFavoriteSong"] = favoriteSong ? true : false;
     res.render("client/pages/songs/detail",{
         pageTitle : "Chi tiết bài hát",
         song : song,
@@ -61,7 +67,7 @@ export const detail = async (req : Request, res : Response) => {
 
 };
 
-//[PATCH] /songs/like/:type/:slugSong
+//[PATCH] /songs/like/:type/:songId
 export const like = async (req : Request, res : Response) => {
     const type : string = req.params.type;
     const songId : string = req.params.songId;
@@ -88,4 +94,37 @@ export const like = async (req : Request, res : Response) => {
         message:"Thành công!",
         like : updateLike
     });
-}
+};
+
+//[PATCH] /songs/favorite/:type/:songId
+export const favorite = async (req : Request, res : Response) => {
+    const type : string = req.params.type;
+    const songId : string = req.params.songId;
+
+    if (type == "yes") {
+        const existRecord = await FavoriteSong.findOne({
+            userId : "",
+            songId : songId,
+            deleted : false
+        });
+
+        if(!existRecord) {
+            const record = new FavoriteSong({
+                userId : "",
+                songId : songId,
+            });
+            await record.save();
+        }
+    }
+    else {
+        await FavoriteSong.deleteOne({
+            userId : "",
+            songId : songId
+        });
+    }
+    res.json({
+        code:200,
+        message: "Thành công!"
+    })
+    
+};
