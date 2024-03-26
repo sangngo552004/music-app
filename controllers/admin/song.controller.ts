@@ -34,9 +34,18 @@ export const create = async (req : Request, res : Response) => {
 
 //[POST] /admin/songs/createPost
 export const createPost = async (req : Request, res : Response) => {
+    if(req.body.avatar) {
+        req.body.avatar = req.body.avatar[0];
+      }
+    
+      if(req.body.audio) {
+        req.body.audio = req.body.audio[0];
+    }
+    
     const song = new Song(req.body);
     await song.save();
     
     res.redirect(`/${systemConfig.prefixAdmin}/songs`);
   
 }
+

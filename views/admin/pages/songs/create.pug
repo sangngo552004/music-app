@@ -58,6 +58,32 @@ block main
           class="image-preview"
           upload-image-preview
         )
+      div(
+      class="form-group"
+      upload-audio
+      )
+        label(for="audio") File âm thanh
+        input(
+          type="file"
+          class="form-control-file"
+          id="audio"
+          name="audio"
+          accept="audio/*"
+          upload-audio-input
+        )
+        audio(controls upload-audio-play)
+          source(src="")
+      div(class="form-group")
+        label(for="lyrics") Lời bài hát
+        textarea(
+          class="form-control"
+          id="lyrics"
+          name="lyrics"
+          rows="20"
+        ).
+          [00:02.00] Lời bài hát từ giây thứ 2
+          [00:04.00] Lời bài hát từ giây thứ 4
+          [00:06.00] Lời bài hát từ giây thứ 6
       div(class="form-group")
         label(for="desc") Mô tả
         textarea(
